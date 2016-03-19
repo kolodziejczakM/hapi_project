@@ -1,0 +1,17 @@
+{
+  "name": "hapi-projekcik",
+  "version": "1.0.0",
+  "description": "Pierwszy projekt w hapi",
+  "main": "server.js",
+  "scripts": {
+    "test": ""
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "good": "^6.6.0",
+    "good-console": "^5.3.1",
+    "hapi": "^13.0.0",
+    "inert": "^3.2.0"
+  }
+}
