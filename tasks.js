@@ -12,7 +12,8 @@ const fs = require('fs');
 function Tasks (){
     var all = [];
     var id_container = {};
-    
+    var title;
+    var done;
     
     this.id_ini = function (title,done){   
         id_container = {title: title, done: done, id: all.length};    
@@ -22,16 +23,19 @@ function Tasks (){
     
     // "tworzy nowy task (przyjmuje nazwe i stan taska) , przypisuje mu ID i dodaje go do pliku tasks.json"
     this.create_task = function (title, done){
-        this.title = String(title);
-        this.done = Boolean(done);
+       title = String(title);
+       done = Boolean(done);
 
-        this.id_ini(this.title,this.done);
+        this.id_ini(title,done);
 
         fs.writeFileSync("tasks.json", JSON.stringify(all),"UTF-8" ,(err) => {
             if (err) throw err; 
         }); 
 
     };
+    
+    
+    
     
     
     // "usuwa z pliku tasks.json task o zadanym ID"
@@ -48,7 +52,7 @@ function Tasks (){
     // "zwraca wszystkie pliki z pliku tasks.json"
     this.get_all_task= function(){
         all = JSON.parse(fs.readFileSync('tasks.json', 'utf8'));  
-        return all  
+        return all;  
     };
     
     // "no, edytuje task i zmienia jego wpis w pliku" 

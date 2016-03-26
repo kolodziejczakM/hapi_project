@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8"/>
     <title>Task manager 2016</title>  
-      <script src="/qwest.min.js"></script>
+      <script src="https://www.cubbyusercontent.com/pl/qwest.min.js/_5ee564c34e2c4889866a0ab84588ecbf"></script>
         <!--Załączenie tego ze ścieżką na plik znajdujący się w tym samym folderze
                 wywalało 404. Powyższe rozwiązanie jest chwilowe :). -->
     <style>
@@ -171,27 +171,20 @@
                  <h1>Task manager 2016</h1>
             </header>
           </div>
-          <!--
-          // Pytanie 1 i 2 znajdują się w pliku server.js //
-            
-        // Pytanie 3: Aby uniknąć przejścia na pusty widok (w ogóle na inny widok) po zdarzeniu "submit" formularza
-        // utworzyłem ukryty iframe  i atrybutem target skierowałem na niego  -> dzieki temu uzytkownik wysyła i zostaje 
-        // na tej samej stronie. Wiem jednak, że to dosyć egzotyczny sposób xd. Probowałem to zrobić AJAXOWO z biblioteką
-        // qwest, ale nie bardzo mi to wychodzilo, w czystym js z obiektem XHR też.
-        // Mógłbyś jakoś mnie nakierować, coś doradzić?  
-            
-             Pytanie 4 znajduje się u dołu tego pliku  -->
+          
           
           <iframe name="hiddenFrame" class="hide"></iframe>
           
           <div class="row">
                 <div class="column-left">
-                    <form id="form" method="POST" action="/api/v1/tasks" target="hiddenFrame">
+                    <form id="form" name="form" method="POST" action="">
                         <input id="formTitle" type="text" placeholder="Write here task title" name="formTitle"/></br>
                       <input id="formDone" type="checkbox" name="formDone" value="false" /><label class="label" for="formDone"><span>ZROBIONE</span></label></br>
-                        <input id="submit" type="submit" value="Add task"/>
+<!--                        <input id="submit" type="submit" value="Add task"/>-->
+                        <button type="submit" id="submit">Add task</button>
                     </form>
                     <button id="download">Download all task</button>
+                   
                 </div>    
                 <div class="column-right">
                     <div id="task-container">
@@ -210,10 +203,12 @@
     <script>
         window.onload= function(){
             
-            var doneLabel = document.querySelector("span");
-            var button = document.getElementById("download");
-            var submit = document.getElementById("submit");
-            
+            var doneLabel = document.querySelector("span"),
+                button = document.getElementById("download"),
+                submit = document.getElementById("submit"),
+                form = document.getElementById("form"),
+                inputs_nodelist = document.getElementsByTagName('input'),
+                inputs = Array.prototype.slice.call(inputs_nodelist);
             
             button.onclick = function downloadAll(){
            // qwest.setDefaultDataType('json');
@@ -229,7 +224,16 @@
                         task_entity.innerHTML = response[i].title;
                         task_entity.setAttribute('class', 'task-class');
                         task_container.appendChild(task_entity); 
-                       // console.log("Tytuł: " + response[i].title + ' , ' + "Status: " + response[i].done);
+                        var task_entity_checkbox = document.createElement('input');
+                        task_entity_checkbox.setAttribute("type","checkbox");
+                        task_entity_checkbox.value =response[i].done;
+                        if(task_entity_checkbox.value == 'true'){
+                            task_entity_checkbox.checked = true;
+                        }
+                        else{
+                            task_entity_checkbox.checked = false;
+                        }
+                        task_entity.appendChild(task_entity_checkbox);
                     }   
      });
      // Pytanie 4: response[i]done zwraca wartość TRUE jeśli checkbox był zaznaczony albo FALSE jeśli nie był ( i tak chciałem ..ale) -
@@ -237,10 +241,10 @@
      // W przypadku gdy checkbox jest zaznaczony w formData jest FALSE ?? Dlaczego tak?  I czemu wówczas zwraca mi "Status: " true?. 
         };  
             
-            console.log("lol");
+           
             formDone.addEventListener("click",function (){
-                console.log(formDone);
-            (formDone.checked) ? formDone.value=true : formDone.value = false;
+               // console.log(formDone);
+            (formDone.checked) ? formDone.value= true : formDone.value = false;
                 if(formDone.checked)
                 doneLabel.setAttribute("style","color:green;");
                 else
@@ -250,8 +254,9 @@
             
             
        
-        submit.addEventListener("click",function(){
-            
+        submit.addEventListener("click",function(e){
+          e.preventDefault();
+               
             if(formTitle.value.length>0){
             var task_entity = document.createElement('div');    
             task_entity.innerHTML = formTitle.value;
@@ -259,6 +264,17 @@
             var task_container = document.getElementById("task-container");
                 if(task_container.innerHTML.indexOf(formTitle.value) == -1){
            task_container.appendChild(task_entity); 
+            var task_entity_checkbox = document.createElement('input');
+                        task_entity_checkbox.setAttribute("type","checkbox");
+                        task_entity_checkbox.value = formDone.value;  
+                    if(task_entity_checkbox.value == 'true'){
+                        task_entity_checkbox.checked = true;
+                    }
+                    else{
+                        task_entity_checkbox.checked =false;
+                    }
+           task_entity.appendChild(task_entity_checkbox);        
+                   
                 }
                 else{
                     alert("Hmm być może taki task już jest...");
@@ -267,6 +283,32 @@
                 alert("WPISZ TYTUŁ TASKA!");
                 return false;
             }
+           
+            if(formDone.value =="true"){
+                qwest.post('/api/v1/tasks', {
+                            formTitle: formTitle.value,
+                            formDone: formDone.value
+                                    })
+                                    .then(function(xhr, response) {
+                                        console.log("Odpowiedź servera:");
+                                        console.log(response.header);
+                                                                    })
+                                        .catch(function(e, xhr, response) {
+                                        
+                                        });
+            }
+            else{
+                qwest.post('/api/v1/tasks', {
+                            formTitle: formTitle.value
+                                    })
+                                    .then(function(xhr, response) {
+                                        console.log("Odpowiedź servera:");
+                                        console.log(response.header);
+                                                                    })
+                                        .catch(function(e, xhr, response) {
+                                        });
+            }
+                    
         });    
             
         };

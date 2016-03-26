@@ -59,27 +59,13 @@ server.register(require('inert'), (err) => {
         method: 'POST',
         path: '/api/v1/tasks',
         handler: function (request, reply) { 
-           reply(create.create_task(request.payload.formTitle,request.payload.formDone));
+//           reply(create.create_task(request.payload.formTitle,request.payload.formDone));
+            reply(create.create_task(request.payload.formTitle,request.payload.formDone));
         }
     }); 
-            // PYTANIE 1: Czy zakomentowana trasa ma być zrealizowana?
-            //(bo na trello taką podałeś a nie wiem czy to w ogóle miałoby sens...) 
-            //Patrzyłem na to:
-            //http://restful-api-design.readthedocs.org/en/latest/methods.html
     
-//    server.route({
-//        method: 'POST',
-//        path: '/api/v1/task/{id?}',
-//        handler: function (request, reply) {
-//      if (request.params.id) {
-//            if (create.all.length <= request.params.id) {
-//            return reply('Nie można zapisać.').code(404);
-//                  }
-//      return reply(create.all[request.params.id]);
-//    }
-//    reply(create.all);
-//        }
-//    }); 
+     
+       
     
      server.route({
         method: 'DELETE',
@@ -94,8 +80,7 @@ server.register(require('inert'), (err) => {
     }
    
     }}); 
-            // PYTANIE 2: Napisałeś żebym zrealizował PUT i PATCH + jednocześnie wspominałeś o jednej metodzie "edit_task".
-            //Da się w ogóle tak zrobić?  Poniżej zrealizowałem coś pomiędzy PUT i PATCH -> patrz tasks.js.
+            
      
         
       server.route({
