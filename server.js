@@ -17,17 +17,23 @@ server.register(require('inert'), (err) => {
         throw err;
     }
     
-    
+   
     
     //znaleźć w dokumentacji HAPI jak serwować cały katalog
      server.route({
         method: 'GET',
-        path: '/home',
-        handler: function (request, reply) {
-            reply.file('index.html');
+        path: '/{param?}',
+        handler:{
+ 		directory: {
+            path: 'public',
+            listing: false,
+            index: true,
+           redirectToSlash:true
+            
         }
+    }      
     });
-    
+     
     
     
     server.route({
