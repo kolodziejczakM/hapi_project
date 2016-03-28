@@ -1,10 +1,11 @@
 <!doctype>
 <html lang="pl">
   <head>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- bez tego media queries na tel nie dzialaja -->
     <meta charset="utf-8"/>
     <title>Task manager 2016</title>  
-<!--      <script src="https://www.cubbyusercontent.com/pl/qwest.min.js/_5ee564c34e2c4889866a0ab84588ecbf"></script>-->
-      <script src="qwest.min.js"></script>
+      <script src="https://www.cubbyusercontent.com/pl/qwest.min.js/_5ee564c34e2c4889866a0ab84588ecbf"></script>
+<!--      <script src="qwest.min.js"></script>-->
         <!--Załączenie tego ze ścieżką na plik znajdujący się w tym samym folderze
                 wywalało 404. Powyższe rozwiązanie jest chwilowe :). -->
     <style>
@@ -86,7 +87,7 @@
             font-style:italic;
             text-align: center;
         }
-        input[type="submit"]{
+        #submit{
             padding:7%;
             margin-top:20px;
             margin-left:7%;
@@ -126,7 +127,7 @@
         input[type="text"]:hover{
             background-color: lightgreen;
         }
-        input[type="submit"]:hover{
+        #submit:hover{
             background-color:lightgreen;
         }
         #download{
@@ -148,6 +149,7 @@
               height:1px; 
         }
         .task-class{
+            position:relative;
             box-sizing:border-box;
             background-color:darkgray;
             width:100%;
@@ -163,6 +165,28 @@
             padding-top:13px;
             padding-bottom:13px;
         }
+        .task-checkbox-class{
+           position:absolute;
+            top:6px;
+            right:2px;
+        }
+        @media all and (min-width:320px) and (max-width:760px){
+            body{
+                background-color:red;
+            }
+            .column-left{
+            width:100%;
+            margin-left:0;
+        }
+        .column-right{
+            width:100%;
+            margin-right:0;
+        }
+        #download{
+            margin:10px 0 0 10px;
+            float:right;
+        }    
+        } 
     </style>  
   </head>
   <body>
@@ -227,6 +251,7 @@
                         task_container.appendChild(task_entity); 
                         var task_entity_checkbox = document.createElement('input');
                         task_entity_checkbox.setAttribute("type","checkbox");
+                        task_entity_checkbox.setAttribute("class","task-checkbox-class");
                         task_entity_checkbox.value =response[i].done;
                         if(task_entity_checkbox.value == 'true'){
                             task_entity_checkbox.checked = true;
@@ -265,6 +290,7 @@
            task_container.appendChild(task_entity); 
             var task_entity_checkbox = document.createElement('input');
                         task_entity_checkbox.setAttribute("type","checkbox");
+                        task_entity_checkbox.setAttribute("class","task-checkbox-class");
                         task_entity_checkbox.value = formDone.value;  
                     if(task_entity_checkbox.value == 'true'){
                         task_entity_checkbox.checked = true;
